@@ -1,0 +1,10 @@
+{
+  "name": "Sergio KOTIN — Agentic Engineer",
+  "short_name": "Sergio KOTIN",
+  "lang": "fr",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#080a0f",
+  "theme_color": "#080a0f",
+  "description": "Portfolio de Sergio KOTIN, ingénieur agentique et architecte IA."
+}
