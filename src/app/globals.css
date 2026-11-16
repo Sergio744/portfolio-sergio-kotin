@@ -1,0 +1,288 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-grotesk);
+  --font-mono: var(--font-jbmono);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@theme {
+  /* ── Portfolio palette ─────────────────────────────── */
+  --color-paper: #f4f0e6;          /* warm cream (light sections) */
+  --color-paper-deep: #eae4d4;     /* deeper cream */
+  --color-card-cream: #faf7f0;     /* raised card on paper */
+  --color-ink: #17140f;            /* near-black warm ink */
+  --color-ink-soft: #5d574a;       /* muted ink */
+  --color-night: #09080d;          /* deep night (dark sections) */
+  --color-night-soft: #100e17;     /* raised dark card */
+  --color-bone: #f2efe6;           /* light text on night */
+  --color-bone-soft: #a49f93;      /* muted text on night */
+  --color-violet: #7f1dff;         /* reference purple */
+  --color-violet-soft: #9d5cff;
+  --color-magenta: #d466b8;        /* reference pink */
+  --color-sun: #ffeb34;            /* reference yellow */
+  --color-emerald: #0e6b4e;        /* v1 green accent */
+  --color-emerald-soft: #7fc8a9;   /* light green for dark bg */
+  --color-gold: #c2962b;           /* v1 gold accent */
+}
+
+:root {
+  /* font stacks — plain :root so they're never tree-shaken */
+  --font-fraunces: "Fraunces Variable";
+  --font-grotesk: "Space Grotesk Variable";
+  --font-jbmono: "JetBrains Mono Variable";
+  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-body: var(--font-grotesk), system-ui, sans-serif;
+  --font-mono: var(--font-jbmono), ui-monospace, monospace;
+
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-power: cubic-bezier(0.23, 1, 0.32, 1);
+
+  --radius: 0.625rem;
+  --background: #f4f0e6;
+  --foreground: #17140f;
+  --card: #faf7f0;
+  --card-foreground: #17140f;
+  --popover: #faf7f0;
+  --popover-foreground: #17140f;
+  --primary: #17140f;
+  --primary-foreground: #f4f0e6;
+  --secondary: #eae4d4;
+  --secondary-foreground: #17140f;
+  --muted: #eae4d4;
+  --muted-foreground: #5d574a;
+  --accent: #eae4d4;
+  --accent-foreground: #17140f;
+  --border: rgba(23, 20, 15, 0.14);
+  --input: rgba(23, 20, 15, 0.14);
+  --ring: #0e6b4e;
+}
+
+/* ── element resets — INSIDE @layer base so Tailwind      ──
+   utilities (padding, colors on a/button, …) always win.  */
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: initial; /* Lenis takes over */
+  }
+
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: clip;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  button {
+    font: inherit;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: inherit;
+  }
+
+  img {
+    max-width: 100%;
+    display: block;
+  }
+
+  ::selection {
+    background: var(--color-sun);
+    color: var(--color-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  /* thin elegant scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(23, 20, 15, 0.28);
+    border-radius: 99px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+  }
+}
+
+/* Lenis state classes (dynamic, kept unlayered) */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* static film grain — texture without a motion loop */
+body::after {
+  content: "";
+  position: fixed;
+  inset: -50%;
+  z-index: 130;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
+}
+
+/* ── typography helpers ─────────────────────────────── */
+.font-display {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+}
+.font-mono {
+  font-family: var(--font-mono);
+}
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* outlined display text — fill transparent, stroke keeps utility color */
+.text-stroke {
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 1px currentColor;
+  paint-order: stroke fill;
+}
+
+/* ── custom cursor ──────────────────────────────────── */
+@media (hover: hover) and (pointer: fine) {
+  .cursor-enabled,
+  .cursor-enabled a,
+  .cursor-enabled button {
+    cursor: none;
+  }
+}
+
+/* ── marquee ────────────────────────────────────────── */
+@keyframes marquee-left {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-left var(--marquee-duration, 40s) linear infinite;
+  will-change: transform;
+}
+.marquee-track.reverse {
+  animation-direction: reverse;
+}
+.marquee-paused:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+/* ── press feedback — Emil Kowalski: buttons must feel responsive ──
+   scale(0.97) on :active, transform at 160ms, colors at 300ms,
+   one curve (--ease-power = strong ease-out). */
+.press {
+  transition:
+    transform 160ms var(--ease-power),
+    background-color 300ms var(--ease-power),
+    color 300ms var(--ease-power),
+    border-color 300ms var(--ease-power),
+    opacity 300ms var(--ease-power);
+}
+.press:active {
+  transform: scale(0.97);
+}
+@media (prefers-reduced-motion: reduce) {
+  .press:active {
+    transform: none;
+  }
+}
+
+/* ── link underline sweep ───────────────────────────── */
+.u-sweep {
+  position: relative;
+}
+.u-sweep::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.45s var(--ease-expo);
+}
+.u-sweep:hover::after,
+.u-sweep[data-active="true"]::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* the one rich gradient — reserved for the hero orb signature */
+.grad-violet {
+  background: linear-gradient(115deg, var(--color-violet) 0%, var(--color-magenta) 55%, #ffb86b 110%);
+}
+
+/* status pulse */
+@keyframes pulse-dot {
+  0% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0.55); }
+  70% { box-shadow: 0 0 0 9px rgba(46, 204, 113, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(46, 204, 113, 0); }
+}
+.dot-live {
+  animation: pulse-dot 2.2s ease-out infinite;
+}
+
+/* vertical writing */
+.v-text {
+  writing-mode: vertical-rl;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track,
+  .dot-live {
+    animation: none !important;
+  }
+}
